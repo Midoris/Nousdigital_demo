@@ -6,12 +6,18 @@
 //
 
 import UIKit
+import Kingfisher
 
 class NewsItemCell: UITableViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var thumbnailImageView: UIImageView!
     @IBOutlet weak var descriptionLabel: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        selectionStyle = .none
+    }
     
     var viewModel: NewsItemCellVM? {
         didSet {
@@ -31,7 +37,15 @@ class NewsItemCell: UITableViewCell {
     private func setThumbnail(urlString: String) {
         thumbnailImageView.kf.indicatorType = .activity
         let placeholderImage = UIImage(named: "placeholder-image")
-        thumbnailImageView.kf.setImage(with: URL(string: urlString), placeholder: placeholderImage)
+        thumbnailImageView.kf.setImage(with: URL(string: urlString), placeholder: placeholderImage) { [weak self] result in
+            switch result {
+            case .success:
+                self?.thumbnailImageView.backgroundColor = .clear
+            case .failure:
+                self?.thumbnailImageView.backgroundColor = .darkGray
+            }
+            
+        }
     }
     
     private func cleanUp() {

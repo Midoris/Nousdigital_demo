@@ -8,7 +8,7 @@
 import UIKit
 
 protocol NewsTableInteractionViewDelegate: AnyObject {
-    
+    func newsItmeSelected(newsItem: NewsItem)
 }
 
 class NewsTableView: UITableView {
@@ -47,5 +47,9 @@ extension NewsTableView: UITableViewDataSource {
 }
 
 extension NewsTableView: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let newsItem = newsItems[safe: indexPath.row] else { return }
+        ineratcionDelegate?.newsItmeSelected(newsItem: newsItem)
+    }
     
 }
