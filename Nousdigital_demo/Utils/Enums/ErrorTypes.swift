@@ -17,7 +17,7 @@ enum NetworkError: Error {
         case .invalidURL:
             return "Provided URL is not valid"
         case .invalidData:
-            return "Response is not valid"
+            return "Could not fetch data"
         case .systemError(let error):
             return error.localizedDescription
         }

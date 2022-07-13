@@ -25,7 +25,6 @@ class NewsItemCell: UITableViewCell {
             titleLabel.text = vm.title
             descriptionLabel.text = vm.description
             setThumbnail(urlString: vm.thumbnailURL)
-            
         }
     }
     
@@ -36,16 +35,8 @@ class NewsItemCell: UITableViewCell {
     
     private func setThumbnail(urlString: String) {
         thumbnailImageView.kf.indicatorType = .activity
-        let placeholderImage = UIImage(named: "placeholder-image")
-        thumbnailImageView.kf.setImage(with: URL(string: urlString), placeholder: placeholderImage) { [weak self] result in
-            switch result {
-            case .success:
-                self?.thumbnailImageView.backgroundColor = .clear
-            case .failure:
-                self?.thumbnailImageView.backgroundColor = .darkGray
-            }
-            
-        }
+        let placeholderImage = UIImage(named: "image_placeholder")
+        thumbnailImageView.kf.setImage(with: URL(string: urlString), placeholder: placeholderImage)
     }
     
     private func cleanUp() {

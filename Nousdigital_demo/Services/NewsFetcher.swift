@@ -23,7 +23,7 @@ struct NewsFetcher {
                     completion(.failure(.invalidData))
                     return
                 }
-                
+
                 let decoder = JSONDecoder()
                 do {
                     let news = try decoder.decode(News.self, from: data)

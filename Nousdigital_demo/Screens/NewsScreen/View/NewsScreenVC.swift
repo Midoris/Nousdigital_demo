@@ -7,35 +7,74 @@
 
 import UIKit
 import MessageUI
+import RxSwift
+import RxCocoa
 
 class NewsScreenVC: UIViewController {
 
-    @IBOutlet weak var tableView: NewsTableView!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
+    var viewModel = NewsViewModel()
+    private let disposeBag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         initialViewSetup()
-        fetchNews()
+        setupTable()
     }
     
     private func initialViewSetup() {
-        tableView.ineratcionDelegate = self
+        tableView.tableFooterView = UIView()
         title = "News"
     }
     
-    private func fetchNews() {
-        NewsFetcher.fetchNews { result in
-            DispatchQueue.main.async { [weak self] in
-                switch result {
-                case .success(let news):
-                    self?.tableView.newsItems = news.items
-                case .failure(let error):
-                    self?.showErrorAlert(message: error.message)
-                }
-            }
-        }
+    private func setupTable() {
+        bindTableData()
+        setupDidSelect()
+        fetchData()
     }
     
+    private func bindTableData() {
+        let searchTextFieldObservable = searchBar.searchTextField.rx.text.asObservable()
+        let itemsObservable = viewModel.newsItems.asObservable()
+
+        Observable.combineLatest(searchTextFieldObservable, itemsObservable)
+            .observe(on: MainScheduler.asyncInstance)
+            .throttle(.microseconds(500), scheduler: MainScheduler.instance)
+            .map { text, list -> [NewsItem] in
+                guard let searchText = text, searchText.isEmpty == false else {
+                    return list
+                }
+                let lowercasedSearchText = searchText.lowercased()
+                let result = list.filter { item in
+                    let containsInTitle = item.title.lowercased().range(of: lowercasedSearchText) != nil
+                    let containsInDescription = item.description.lowercased().range(of: lowercasedSearchText) != nil
+                    return containsInTitle || containsInDescription
+                }
+                return result
+            }.bind(
+                to: tableView.rx.items(
+                    cellIdentifier: NewsItemCell.reuseIdentifier,
+                    cellType: NewsItemCell.self)
+            ) {  row, model, cell in
+                cell.viewModel  = NewsItemCellVM(newsItem: model)
+            }.disposed(by: disposeBag)
+    }
+    
+    private func setupDidSelect() {
+        tableView.rx.modelSelected(NewsItem.self).bind { newsItem in
+            self.showEmailForm(newsItem: newsItem)
+        }.disposed(by: disposeBag)
+    }
+    
+    private func fetchData() {
+        viewModel.fetchNews(onError: { error in
+            DispatchQueue.main.async {
+                self.showErrorAlert(message: error.message)
+            }
+        })
+    }
+        
     private func showErrorAlert(message: String) {
         let alert = UIAlertController(title: "Sorry", message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default)
@@ -53,16 +92,10 @@ class NewsScreenVC: UIViewController {
 
             present(mail, animated: true)
         } else {
-            showErrorAlert(message: "Your device do not support sending mail")
+            showErrorAlert(message: "Your device do not support sending mail or your mailboxes are not setup")
         }
     }
 
-}
-
-extension NewsScreenVC: NewsTableInteractionViewDelegate {
-    func newsItmeSelected(newsItem: NewsItem) {
-        showEmailForm(newsItem: newsItem)
-    }
 }
 
 extension NewsScreenVC: MFMailComposeViewControllerDelegate {
