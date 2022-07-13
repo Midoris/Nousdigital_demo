@@ -42,16 +42,11 @@ class NewsScreenVC: UIViewController {
             .observe(on: MainScheduler.asyncInstance)
             .throttle(.microseconds(500), scheduler: MainScheduler.instance)
             .map { text, list -> [NewsItem] in
-                guard let searchText = text, searchText.isEmpty == false else {
+                guard let searchedText = text, searchedText.isEmpty == false else {
                     return list
                 }
-                let lowercasedSearchText = searchText.lowercased()
-                let result = list.filter { item in
-                    let containsInTitle = item.title.lowercased().range(of: lowercasedSearchText) != nil
-                    let containsInDescription = item.description.lowercased().range(of: lowercasedSearchText) != nil
-                    return containsInTitle || containsInDescription
-                }
-                return result
+                let filteredItems = list.filter { self.newsFilter($0, searchedText) }
+                return filteredItems
             }.bind(
                 to: tableView.rx.items(
                     cellIdentifier: NewsItemCell.reuseIdentifier,
@@ -59,6 +54,13 @@ class NewsScreenVC: UIViewController {
             ) {  row, model, cell in
                 cell.viewModel  = NewsItemCellVM(newsItem: model)
             }.disposed(by: disposeBag)
+    }
+    
+    private var newsFilter: (NewsItem, String) -> Bool = { item, searchedText in
+        let lowercasedSearchedText = searchedText.lowercased()
+        let containsInTitle = item.title.lowercased().range(of: lowercasedSearchedText) != nil
+        let containsInDescription = item.description.lowercased().range(of: lowercasedSearchedText) != nil
+        return containsInTitle || containsInDescription
     }
     
     private func setupDidSelect() {

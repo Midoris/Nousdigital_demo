@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C7729DA1287D50D20028FAEC /* Collection+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7729DA0287D50D20028FAEC /* Collection+extensions.swift */; };
 		C7729DA3287D51610028FAEC /* NewsItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7729DA2287D51610028FAEC /* NewsItemCell.swift */; };
 		C7729DA8287D51D60028FAEC /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7729DA7287D51D60028FAEC /* Reusable.swift */; };
 		C7729DAF287E59170028FAEC /* NewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7729DAE287E59170028FAEC /* NewsViewModel.swift */; };
@@ -29,7 +28,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		C7729DA0287D50D20028FAEC /* Collection+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+extensions.swift"; sourceTree = "<group>"; };
 		C7729DA2287D51610028FAEC /* NewsItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsItemCell.swift; sourceTree = "<group>"; };
 		C7729DA7287D51D60028FAEC /* Reusable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
 		C7729DAE287E59170028FAEC /* NewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewModel.swift; sourceTree = "<group>"; };
@@ -63,14 +61,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C7729D9E287D50A20028FAEC /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				C7729DA0287D50D20028FAEC /* Collection+extensions.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		C7729D9F287D50AB0028FAEC /* Enums */ = {
 			isa = PBXGroup;
 			children = (
@@ -144,7 +134,6 @@
 			children = (
 				C7729DA6287D51CB0028FAEC /* Protocols */,
 				C7729D9F287D50AB0028FAEC /* Enums */,
-				C7729D9E287D50A20028FAEC /* Extensions */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -275,7 +264,6 @@
 				C7729DA8287D51D60028FAEC /* Reusable.swift in Sources */,
 				C79EB1E2287D3BF500EFBCFB /* NewsFetcher.swift in Sources */,
 				C79EB1BA287D30A500EFBCFB /* AppDelegate.swift in Sources */,
-				C7729DA1287D50D20028FAEC /* Collection+extensions.swift in Sources */,
 				C79EB1DF287D3A6200EFBCFB /* News.swift in Sources */,
 				C79EB1EA287D432B00EFBCFB /* NewsScreenVC.swift in Sources */,
 				C7729DAF287E59170028FAEC /* NewsViewModel.swift in Sources */,
